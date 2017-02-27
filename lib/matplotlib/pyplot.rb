@@ -14,6 +14,10 @@ module Matplotlib
     end
 
     class << self
+      def __pyobj__
+        @pyplot
+      end
+
       def method_missing(name, *args, **kwargs)
         return super unless PyCall.hasattr?(@pyplot, name)
         PyCall.getattr(@pyplot, name)

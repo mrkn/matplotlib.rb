@@ -28,4 +28,8 @@ module Matplotlib
 
   class Error < StandardError
   end
+
+  class Figure
+    include PyCall::PyObjectWrapper
+  end
 end
