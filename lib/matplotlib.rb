@@ -25,4 +25,7 @@ module Matplotlib
   if Matplotlib.get_backend() == 'MacOSX'
     Matplotlib.use('TkAgg')
   end
+
+  class Error < StandardError
+  end
 end
