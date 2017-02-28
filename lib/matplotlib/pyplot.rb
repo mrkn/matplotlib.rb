@@ -5,8 +5,8 @@ module Matplotlib
     @pyplot = PyCall.import_module('matplotlib.pyplot')
     PyCall.dir(@pyplot).each do |name|
       obj = PyCall.getattr(@pyplot, name)
-      next unless obj.kind_of? PyCall::PyObject
-      next unless obj.kind_of? PyCall::LibPython.PyFunction_Type
+      next unless obj.kind_of?(PyCall::PyObject) || obj.kind_of?(PyCall::PyObjectWrapper)
+      next unless PyCall.callable?(obj)
 
       define_singleton_method(name) do |*args, **kwargs|
         obj.(*args, **kwargs)
