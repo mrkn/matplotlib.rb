@@ -34,4 +34,5 @@ module Matplotlib
   end
 end
 
+require 'matplotlib/axes'
 require 'matplotlib/figure'
