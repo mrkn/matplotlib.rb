@@ -32,8 +32,6 @@ module Matplotlib
       # NOTE: This method is translated from `IPython.core.activate_matplotlib` function.
       def activate(gui=:inline)
         require 'matplotlib/pyplot'
-        figure_class = Pyplot.__pyobj__.Figure
-        PyCall::Conversions.python_type_mapping(figure_class, Figure)
       end
     end
   end
