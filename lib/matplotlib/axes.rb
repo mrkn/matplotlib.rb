@@ -1,5 +1,5 @@
 module Matplotlib
-  class Axes3D
+  class Axes
     include PyCall::PyObjectWrapper
 
     @__pyobj__ = PyCall.import_module('matplotlib.axes').Axes
