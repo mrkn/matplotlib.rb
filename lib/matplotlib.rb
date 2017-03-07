@@ -35,6 +35,7 @@ module Matplotlib
 end
 
 require 'matplotlib/axes'
+require 'matplotlib/polar_axes'
 require 'matplotlib/figure'
 
 PyCall.append_sys_path(File.expand_path('../matplotlib/python', __FILE__))
