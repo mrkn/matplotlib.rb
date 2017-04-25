@@ -1,8 +1,7 @@
 # Matplotlib
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/matplotlib`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This library enables to directly call [matplotlib](https://matplotlib.org/) from Ruby language.
+This is built on top of [pycall](https://github.com/mrkn/pycall).
 
 ## Installation
 
@@ -18,11 +17,35 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install matplotlib
+    $ gem install --pre matplotlib
 
 ## Usage
 
-TODO: Write usage instructions here
+### Using pyplot in irb console or standalone scripts
+
+Example usage:
+
+    require 'matplotlib/pyplot'
+    plt = Matplotlib::Pyplot
+
+    xs = [*1..100].map {|x| (x - 50) * Math::PI / 100.0 }
+    ys = xs.map {|x| Math.sin(x) }
+
+    plt.plot(xs, ys)
+    plt.show()
+
+### IRuby integration
+
+`matplotlib/iruby` provides integration between IRuby notebook and matplotlib.
+This functionality can be enabled by calling `Matplotlib::IRuby.activate`.
+
+    require 'matplotlib/iruby'
+    Matplotlib::IRuby.activate
+
+`matplotlib/iruby` also loads `matplotlib/pyplot`, so you can use `Matplotlib::Pyplot` module without explicitly requireing `matplotlib/pyplot`.
+And this introduces a post execution hook which put figures that are created in a cell just below the execution result of the cell.
+
+See ipynb files in [examples](examples) to see example usages.
 
 ## Development
 
