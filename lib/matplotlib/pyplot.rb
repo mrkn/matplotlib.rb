@@ -18,6 +18,10 @@ module Matplotlib
         @pyplot
       end
 
+      def xkcd(scale: 1, length: 100, randomness: 2, &block)
+        PyCall.with(super.(scale: scale, length: length, randomness: randomness), &block)
+      end
+
       def method_missing(name, *args, **kwargs)
         return super unless PyCall.hasattr?(@pyplot, name)
         PyCall.getattr(@pyplot, name)
