@@ -6,7 +6,7 @@ module Matplotlib
 
   class YTick
     include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').XTick
+    wrap_class PyCall.import_module('matplotlib.axis').YTick
   end
 
   class XAxis
@@ -16,6 +16,6 @@ module Matplotlib
 
   class YAxis
     include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').XAxis
+    wrap_class PyCall.import_module('matplotlib.axis').YAxis
   end
 end
