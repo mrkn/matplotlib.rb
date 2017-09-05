@@ -1,6 +1,4 @@
 module Matplotlib
-  class Axes3D
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('mpl_toolkits.mplot3d').Axes3D
-  end
+  Axes3D = PyCall.import_module('mpl_toolkits.mplot3d').Axes3D
+  Axes3D.__send__ :register_python_type_mapping
 end

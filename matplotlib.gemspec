@@ -5,7 +5,7 @@ require 'matplotlib/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "matplotlib"
-  spec.version       = Matplotlib::VERSION
+  spec.version       = MATPLOTLIB_VERSION
   spec.authors       = ["Kenta Murata"]
   spec.email         = ["mrkn@mrkn.jp"]
 
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "pycall", ">= 0.1.0.alpha.20170426"
+  spec.add_dependency "pycall", ">= 1.0.0.alpha.20170905"
 
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rake", "~> 10.0"
