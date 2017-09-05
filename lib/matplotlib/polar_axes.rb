@@ -1,6 +1,4 @@
 module Matplotlib
-  class PolarAxes
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.projections.polar').PolarAxes
-  end
+  PolarAxes = PyCall.import_module('matplotlib.projections.polar').PolarAxes
+  PolarAxes.__send__ :register_python_type_mapping
 end

@@ -1,33 +1,16 @@
-require "matplotlib/version"
-require 'pycall/import'
+require 'matplotlib/version'
+require 'pycall'
+
+Matplotlib = PyCall.import_module('matplotlib')
 
 module Matplotlib
-  @matplotlib = PyCall.import_module('matplotlib')
-  PyCall.dir(@matplotlib).each do |name|
-    obj = PyCall.getattr(@matplotlib, name)
-    next unless obj.kind_of?(PyCall::PyObject) || obj.kind_of?(PyCall::PyObjectWrapper)
-    next unless PyCall.callable?(obj)
-
-    define_singleton_method(name) do |*args, **kwargs|
-      obj.(*args, **kwargs)
-    end
-  end
-
-  class << self
-    def __pyobj__
-      @matplotlib
-    end
-
-    def method_missing(name, *args, **kwargs)
-      return super unless PyCall.hasattr?(@matplotlib, name)
-      PyCall.getattr(@matplotlib, name)
-    end
-  end
+  VERSION = MATPLOTLIB_VERSION
+  Object.class_eval { remove_const :MATPLOTLIB_VERSION }
 
   # FIXME: MacOSX backend is unavailable via pycall.
   #        I don't know why it is.
-  if Matplotlib.get_backend() == 'MacOSX'
-    Matplotlib.use('TkAgg')
+  if get_backend == 'MacOSX'
+    use('TkAgg')
   end
 
   class Error < StandardError
@@ -40,4 +23,4 @@ require 'matplotlib/polar_axes'
 require 'matplotlib/figure'
 require 'matplotlib/spines'
 
-PyCall.append_sys_path(File.expand_path('../matplotlib/python', __FILE__))
+PyCall.sys.path.insert(0, File.expand_path('../matplotlib/python', __FILE__))

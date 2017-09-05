@@ -5,7 +5,7 @@ require 'matplotlib/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "matplotlib"
-  spec.version       = Matplotlib::VERSION
+  spec.version       = MATPLOTLIB_VERSION
   spec.authors       = ["Kenta Murata"]
   spec.email         = ["mrkn@mrkn.jp"]
 

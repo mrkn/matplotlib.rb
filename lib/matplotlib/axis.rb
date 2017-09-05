@@ -1,21 +1,16 @@
 module Matplotlib
-  class XTick
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').XTick
-  end
+  Axis = PyCall.import_module('matplotlib.axis')
+  module Axis
+    XTick = self.XTick
+    XTick.__send__ :register_python_type_mapping
 
-  class YTick
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').YTick
-  end
+    YTick = self.YTick
+    YTick.__send__ :register_python_type_mapping
 
-  class XAxis
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').XAxis
-  end
+    XAxis = self.XAxis
+    XAxis.__send__ :register_python_type_mapping
 
-  class YAxis
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axis').YAxis
+    YAxis = self.YAxis
+    YAxis.__send__ :register_python_type_mapping
   end
 end

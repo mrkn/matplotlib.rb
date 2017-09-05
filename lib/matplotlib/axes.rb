@@ -1,6 +1,4 @@
 module Matplotlib
-  class Axes
-    include PyCall::PyObjectWrapper
-    wrap_class PyCall.import_module('matplotlib.axes').Axes
-  end
+  Axes = PyCall.import_module('matplotlib.axes').Axes
+  Axes.__send__ :register_python_type_mapping
 end

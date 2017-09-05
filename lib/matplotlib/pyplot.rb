@@ -1,31 +1,11 @@
 require 'matplotlib'
 
 module Matplotlib
+  Pyplot = PyCall.import_module('matplotlib.pyplot')
   module Pyplot
-    @pyplot = PyCall.import_module('matplotlib.pyplot')
-    PyCall.dir(@pyplot).each do |name|
-      obj = PyCall.getattr(@pyplot, name)
-      next unless obj.kind_of?(PyCall::PyObject) || obj.kind_of?(PyCall::PyObjectWrapper)
-      next unless PyCall.callable?(obj)
-
-      define_singleton_method(name) do |*args, **kwargs|
-        obj.(*args, **kwargs)
-      end
-    end
-
-    class << self
-      def __pyobj__
-        @pyplot
-      end
-
-      def xkcd(scale: 1, length: 100, randomness: 2, &block)
-        PyCall.with(super.(scale: scale, length: length, randomness: randomness), &block)
-      end
-
-      def method_missing(name, *args, **kwargs)
-        return super unless PyCall.hasattr?(@pyplot, name)
-        PyCall.getattr(@pyplot, name)
-      end
+    def self.xkcd(scale: 1, length: 100, randomness: 2, &block)
+      ctx = super(scale: scale, length: length, randomness: randomness)
+      PyCall.with(ctx, &block)
     end
   end
 end
