@@ -1,4 +1,4 @@
-require 'pycall'
+require 'matplotlib'
 
 module Matplotlib
   module IRuby
@@ -85,17 +85,18 @@ module Matplotlib
     }.freeze
 
     module Helper
+      BytesIO = PyCall.import_module('io').BytesIO
+
       def register_formats
-        bytes_io = PyCall.import_module('io').BytesIO
         type { Figure }
         AGG_FORMATS.each do |mime, format|
           format mime do |fig|
-            unless fig.canvas.get_supported_filetypes.().has_key?(format)
+            unless fig.canvas.get_supported_filetypes.has_key?(format)
               raise Error, "Unable to display a figure in #{format} format"
             end
-            io = bytes_io.()
-            fig.canvas.print_figure.(io, format: format, bbox_inches: 'tight')
-            io.getvalue.()
+            io = BytesIO.new
+            fig.canvas.print_figure(io, format: format, bbox_inches: 'tight')
+            io.getvalue
           end
         end
       end
@@ -237,9 +238,9 @@ module Matplotlib
       # @param [true, false] close  If true, a `plt.close('all')` call is automatically issued after sending all the figures.
       def show_figures(close=false)
         _pylab_helpers = PyCall.import_module('matplotlib._pylab_helpers')
-        gcf = PyCall.getattr(_pylab_helpers, :Gcf)
+        gcf = _pylab_helpers.Gcf
         kernel = ::IRuby::Kernel.instance
-        gcf.get_all_fig_managers.().each do |fig_manager|
+        gcf.get_all_fig_managers.each do |fig_manager|
           data = ::IRuby::Display.display(fig_manager.canvas.figure)
           kernel.session.send(:publish, :execute_result,
                               data: data,
@@ -247,7 +248,7 @@ module Matplotlib
                               execution_count: kernel.instance_variable_get(:@execution_count))
         end
       ensure
-        unless gcf.get_all_fig_managers.().none?
+        unless gcf.get_all_fig_managers.nil?
           Matplotlib::Pyplot.close('all')
         end
       end
