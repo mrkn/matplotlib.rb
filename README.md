@@ -42,7 +42,7 @@ This functionality can be enabled by calling `Matplotlib::IRuby.activate`.
     require 'matplotlib/iruby'
     Matplotlib::IRuby.activate
 
-`matplotlib/iruby` also loads `matplotlib/pyplot`, so you can use `Matplotlib::Pyplot` module without explicitly requireing `matplotlib/pyplot`.
+`matplotlib/iruby` also loads `matplotlib/pyplot`, so you can use `Matplotlib::Pyplot` module without explicitly requiring `matplotlib/pyplot`.
 And this introduces a post execution hook which put figures that are created in a cell just below the execution result of the cell.
 
 See ipynb files in [examples](examples) to see example usages.
@@ -61,4 +61,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/mrkn/m
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
