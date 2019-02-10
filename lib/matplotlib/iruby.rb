@@ -120,7 +120,7 @@ module Matplotlib
         nbagg: :nbAgg,
         notebook: :nbAgg,
         agg: :agg,
-        inline: 'module://ruby.matplotlib.backend_inline',
+        inline: 'module://matplotlib_rb.backend_inline',
       }.freeze
 
       BACKEND_GUI_MAP = Hash[GUI_BACKEND_MAP.select {|k, v| v }].freeze
