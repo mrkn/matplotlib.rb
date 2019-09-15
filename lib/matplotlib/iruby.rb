@@ -247,7 +247,7 @@ module Matplotlib
                               execution_count: kernel.instance_variable_get(:@execution_count))
         end
       ensure
-        unless gcf.get_all_fig_managers.nil?
+        unless gcf.get_all_fig_managers.length == 0
           Matplotlib::Pyplot.close('all')
         end
       end
