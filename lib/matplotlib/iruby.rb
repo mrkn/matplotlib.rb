@@ -61,7 +61,7 @@ module Matplotlib
         rescue SystemExit
           content[:payload] << { source: :ask_exit }
         rescue Exception => e
-          content = error_message(e)
+          content = error_content(e)
           @session.send(:publish, :error, content)
         end
 
