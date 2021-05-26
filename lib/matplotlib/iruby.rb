@@ -65,13 +65,16 @@ module Matplotlib
           @session.send(:publish, :error, content)
         end
 
+        unless result.nil? || msg[:content]['silent']
+          @session.send(:publish, :execute_result,
+                        data: ::IRuby::Display.display(result),
+                        metadata: {},
+                        execution_count: @execution_count)
+        end
+
         trigger_event(:post_execute)
 
         @session.send(:reply, :execute_reply, content)
-        @session.send(:publish, :execute_result,
-                      data: ::IRuby::Display.display(result),
-                      metadata: {},
-                      execution_count: @execution_count) unless result.nil? || msg[:content]['silent']
       end
     end
 
@@ -211,13 +214,24 @@ module Matplotlib
         # Temporally monky-patching IRuby kernel to enable flushing and closing figures.
         # TODO: Make this feature a pull-request for sciruby/iruby.
         kernel = ::IRuby::Kernel.instance
-        kernel.extend HookExtension
+        kernel.extend HookExtension unless kernel.respond_to?(:events)
         if backend == GUI_BACKEND_MAP[:inline]
-          kernel.register_event(:post_execute, method(:flush_figures))
+          if kernel.respond_to?(:register_event)
+            kernel.register_event(:post_execute, method(:flush_figures))
+          else
+            @post_execute_func = kernel.events.register(:post_execute, &method(:flush_figures))
+          end
+
           # TODO: save original rcParams and overwrite rcParams with IRuby-specific configuration
           new_backend_name = :inline
         else
-          kernel.unregister_event(:post_execute, method(:flush_figures))
+          if kernel.respond_to?(:unregister_event)
+            kernel.unregister_event(:post_execute, method(:flush_figures))
+          elsif @post_execute_func
+            kernel.events.unregister(:post_execute, @post_execute_func)
+            @post_execute_func = nil
+          end
+
           # TODO: restore saved original rcParams
           new_backend_name = :not_inline
         end
@@ -242,10 +256,7 @@ module Matplotlib
         kernel = ::IRuby::Kernel.instance
         gcf.get_all_fig_managers.each do |fig_manager|
           data = ::IRuby::Display.display(fig_manager.canvas.figure)
-          kernel.session.send(:publish, :execute_result,
-                              data: data,
-                              metadata: {},
-                              execution_count: kernel.instance_variable_get(:@execution_count))
+          kernel.session.send(:publish, :display_data, data: data, metadata: {})
         end
       ensure
         unless gcf.get_all_fig_managers.nil?
