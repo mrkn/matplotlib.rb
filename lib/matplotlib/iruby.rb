@@ -65,13 +65,16 @@ module Matplotlib
           @session.send(:publish, :error, content)
         end
 
+        unless result.nil? || msg[:content]['silent']
+          @session.send(:publish, :execute_result,
+                        data: ::IRuby::Display.display(result),
+                        metadata: {},
+                        execution_count: @execution_count)
+        end
+
         trigger_event(:post_execute)
 
         @session.send(:reply, :execute_reply, content)
-        @session.send(:publish, :execute_result,
-                      data: ::IRuby::Display.display(result),
-                      metadata: {},
-                      execution_count: @execution_count) unless result.nil? || msg[:content]['silent']
       end
     end
 
