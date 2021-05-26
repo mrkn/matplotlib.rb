@@ -245,10 +245,7 @@ module Matplotlib
         kernel = ::IRuby::Kernel.instance
         gcf.get_all_fig_managers.each do |fig_manager|
           data = ::IRuby::Display.display(fig_manager.canvas.figure)
-          kernel.session.send(:publish, :execute_result,
-                              data: data,
-                              metadata: {},
-                              execution_count: kernel.instance_variable_get(:@execution_count))
+          kernel.session.send(:publish, :display_data, data: data, metadata: {})
         end
       ensure
         unless gcf.get_all_fig_managers.nil?
