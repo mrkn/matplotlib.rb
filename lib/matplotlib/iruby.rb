@@ -259,7 +259,7 @@ module Matplotlib
           kernel.session.send(:publish, :display_data, data: data, metadata: {})
         end
       ensure
-        unless gcf.get_all_fig_managers.nil?
+        unless gcf.get_all_fig_managers.length == 0
           Matplotlib::Pyplot.close('all')
         end
       end
