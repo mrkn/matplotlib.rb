@@ -1,4 +1,5 @@
 require 'matplotlib'
+require 'matplotlib/pyplot'
 
 module Matplotlib
   module IRuby
@@ -191,13 +192,11 @@ module Matplotlib
       #
       # @param [String, Symbol] backend a name of matplotlib backend
       def activate_matplotlib(backend)
-        require 'matplotlib'
         Matplotlib.interactive(true)
 
         backend = backend.to_s
         Matplotlib.rcParams['backend'] = backend
 
-        require 'matplotlib/pyplot'
         Matplotlib::Pyplot.switch_backend(backend)
 
         # TODO: should support wrapping python function
@@ -262,6 +261,21 @@ module Matplotlib
         unless gcf.get_all_fig_managers.nil?
           Matplotlib::Pyplot.close('all')
         end
+      end
+    end
+  end
+
+  Pyplot.module_eval do
+    def self.show(close=true)
+      _pylab_helpers = PyCall.import_module('matplotlib._pylab_helpers')
+      gcf = _pylab_helpers.Gcf
+      gcf.get_all_fig_managers.each do |fig_manager|
+        ::IRuby::display(fig_manager.canvas.figure)
+      end
+      return
+    ensure
+      if close && gcf.get_all_fig_managers.length > 0
+        close('all')
       end
     end
   end
